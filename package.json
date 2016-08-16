@@ -1,0 +1,15 @@
+{
+  "name": "serial2tcp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Menno Vossen <menno.vossen@kuopzi.nl> (https://github.com/profOnno)",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "serial": "0.0.9"
+  }
+}
