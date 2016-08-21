@@ -27,16 +27,28 @@
                     chunk = chunk || [];
                 }
 
+                // return on empty chunk...
+                // TODO throw error???
+                if (chunk.byteLength === 0) {
+                    return
+                }
+
               // Transform the chunk into something else.
      //         const data = chunk.toString(16);
                 var convert = function ( data ) {
                     var res = data.toString(16);
                     return '0'.repeat(res.length % 2) + res;
                 };
-     
-                var newData = chunk.reduce(function (a, b) {
-                    return (typeof a !== 'string') ?  convert(a) + " " + convert(b) :  a + " " + convert(b);
-                });
+
+                var newData;
+                // reduce doesn't work if byteLength === 1
+                if (chunk.byteLength > 1) {
+                    newData = chunk.reduce(function (a, b) {
+                        return (typeof a !== 'string') ?  convert(a) + " " + convert(b) : a + " " + convert(b);
+                    });
+                } else {
+                    newData = convert(chunk[0]);
+                }
 
               // Push the data onto the readable queue.
               //callback(null, '0'.repeat(data.length % 2) + data);
@@ -46,7 +58,9 @@
                     } else {
                         console.log(this.prefix + newData + ' ');
                     }
-                    callback(null, new Buffer(chunk));
+                    //console.log("callback new Buffer with chunk...");
+                    //console.log("typeof chunk:", typeof chunk);
+                    callback(null, chunk);
 
                 } else {
                     if (this.color) {

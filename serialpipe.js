@@ -31,11 +31,22 @@
             console.log("error enven serialport:", err.message);
         });
 
-        this.sp.on('data', function (data) {
-            //    console.log("data: ", data.toString());
+        this.sp.on('data', function (chunk) {
+            var self = this;
+
+            //console.log("sp on data: ", JSON.stringify(chunk));
             //console.log("in sp on data: ", data);
-            //selfSP.readArr.push(data); // should go out  
-            selfSP.push(data); 
+            /*selfSP.push(data); 
+            self.flush(function () {
+                console.log("flushed");
+            });
+            */
+//            console.log("pushing data from serial port");
+            selfSP.push(chunk); 
+            //selfSP.readArr.push(chunk);
+            //selfSP.read(0);// should activate reader
+            //selfSP.resume(); // should trigger reader?
+        
 
             // trigger read,,,?
         });
@@ -57,13 +68,15 @@
 
     SerialPipe.prototype.close = function () {
         var self = this;
+        console.log("close called");
         self.push(null);
     }
 
     SerialPipe.prototype._read = function readBytes(n) {
-        /*
-        console.log("read active:");
-        var self = this;
+        
+        //console.log("read active:", n);
+        
+/*        var self = this;
         while (self.readArr.length) {
             var chunk = self.readArr.shift();
             if(!self.push(chunk)) {
@@ -71,7 +84,8 @@
                 break; // false from push stop reading
             }
         }
-        */
+        
+ */       
         // how do we need this... single reads?? 
     };
 
@@ -79,7 +93,7 @@
         // test if serial port connected..
         var self = this;
 
-        //console.log("in _write");
+        //console.log("in _write:", JSON.stringify(chunk));
         self.sp.write(chunk.buffer); //write it straigth through
         cb();
     };

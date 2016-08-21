@@ -25,8 +25,10 @@ sp.on('data', function (data) {
     console.log("data: ", data);
 });
 
-setTimeout(function(){
+//setTimeout(function(){
+setInterval(function(){
 //    sp.write('print("hello")\n');
+    console.log("************************************");
     sp.write(new Uint8Array([0x10,0x02,0x31,0x7e,0x94,0x10,0x03]));
-},200);
+},1000);
 
