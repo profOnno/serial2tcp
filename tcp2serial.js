@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var SerialPipe = require('./serialpipe'),
     HexPipe = require('./hexpipe'),
     net = require('net'),
