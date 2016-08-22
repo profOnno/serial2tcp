@@ -4,18 +4,21 @@
         SerialPort = require('serialport'),
         Duplex = stream.Duplex; // || require('readable-stream').Duplex
 
-    function SerialPipe(options) {
+    function SerialPipe(port, options) {
         if (!(this instanceof SerialPipe)) {
-            return new SerialPipe(options);
+            return new SerialPipe(port, options);
         }
 
         var selfSP = this;
-
+/*
         this.sp = new SerialPort('/dev/ttyUSB0', { 
             //        baudrate: 9600,
             baudrate: 230400,      
             parser: SerialPort.parsers.raw
         });
+        */
+
+        this.sp = new SerialPort(port, options);
 
         this.sp.on('open', function (err) {
             if(err) {

@@ -1,15 +1,29 @@
 var SerialPipe = require('./serialpipe'),
     HexPipe = require('./hexpipe'),
-    net = require('net');
+    net = require('net'),
+    SerialPort = require('serialport'), 
+    argv = require('yargs')
+        .usage("zoek 't maar uit")
+        .demand(['s', 'b', 'p'])
+        .alias('s','serialport')
+        .describe('s', 'comx or /dev/ttyUSBx')
+        .alias('b','baudrate')
+        .describe('b', '2400, 9600, 14400..etc')
+        .alias('p','tcpport')
+        .describe('p', 'tcp port to listen on.')
+        .argv;
 
-var sp = new SerialPipe();
+var sp = new SerialPipe(argv.s, {
+                baudrate: argv.b,
+                parser: SerialPort.parsers.raw
+            });
 
 
 
 var server = net.createServer(function (c) {
     // make per client
-    var hexIn = new HexPipe({ prefix: "IN  > ", color: "yellow", dumpOnly: true }),
-        hexOut = new HexPipe({ prefix: "OUT > ", color: "green", dumpOnly: true });
+    var hexIn = new HexPipe({ prefix: "OUT  > ", color: "yellow", dumpOnly: true }),
+        hexOut = new HexPipe({ prefix: "IN > ", color: "green", dumpOnly: true });
 
     console.log('client connected');
     sp.on('error', function (error) {
@@ -48,8 +62,8 @@ server.on('error', function (err) {
     throw err;
 });
 
-server.listen(3000, function () {
-    console.log('listening on port 3000');
+server.listen(argv.p, function () {
+    console.log('listening on port ', argv.p);
 });
 /*
 sp.pipe(hexOut).pipe(process.stdout);
@@ -64,5 +78,6 @@ setTimeout(function () {
     sp.close();
 }, 2000);
 
+            baudrate: 230400,      
 */
 
